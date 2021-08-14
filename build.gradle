@@ -51,4 +51,19 @@ task stopServer(type: KillProcessTask) {
     pidLockFileName '/build/.bootRun.pid.lock'
 }
 
+task startAppWindow(type: Exec) {
+    workingDir("${projectDir}")
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine('cmd', '/k', 'build.sh')
+    }
+    doLast {
+        println "Executed Success!"
+    }
+}
 
+task stopAppWindow(type: Exec) {
+    workingDir("${buildDir}\\libs")
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "taskkill", "/f", "/im", "javaw.exe"
+    }
+}
