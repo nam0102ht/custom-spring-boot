@@ -1,2 +1,50 @@
 server:
   port: 9000
+
+spring:
+  application:
+    name: meow
+  kafka:
+    #    bootstrap-servers:
+    #      - localhost:9092,localhost:9093,localhost:9094
+    bootstrap-servers:
+      - localhost:9092
+    properties:
+      schema.registry.url: http://localhost:8081
+      spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      specific:
+        avro:
+          reader: true
+      security.protocol: PLAINTEXT
+      ssl:
+        truststore:
+          location: ${infrastructure.services.ssl.trustStorePath}
+          password: ${https.truststore.password}
+        keystore:
+          location: ${infrastructure.services.ssl.keyStorePath}
+          password: ${https.keystore.password}
+    listener:
+      ack-mode: manual_immediate
+      concurrency: 3
+      log-container-config: true
+    consumer:
+      topic: fx.referencerates.ibx.v1
+      max-poll-records: 100
+      enable-auto-commit: false
+      group-id: ibx-refreshrates
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      auto.register.schemas: false
+      auto-offset-reset: earliest
+      properties:
+        interceptor:
+          classes: com.nab.ms.refreshrates.logging.LoggingInterceptor
+      client-id: eis-ibx-consumer
+
+    async:
+      poolSize: 10
+      maxPoolSize: 100
+      queueCapacity: 50
+      keepAliveSeconds: 120
+      allowThreadTimeout: true
