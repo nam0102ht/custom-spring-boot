@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "namespace": "com.ntnn",
+  "namespace": "",
   "name": "Customer",
   "fields": [
     { "name": "first_name", "type": "string", "doc": "First Name of Customer" },

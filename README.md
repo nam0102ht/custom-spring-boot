@@ -16,3 +16,8 @@ curl -X POST \
 http://localhost:8081/subjects/<YOUR_TOPIC_NAME>-value/versions \
 -H 'Content-Type: application/vnd.schemaregistry.v1+json' \
 -d @-`
+
+### Run kafka UI management
+`docker run -it -p 9000:9000 \
+-e KAFKA_BROKERCONNECT=<host:port,host:port> \
+obsidiandynamics/kafdrop`
